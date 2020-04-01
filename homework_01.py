@@ -41,6 +41,13 @@ for name in names:
     if name == '肖战':
         count = count +1
 print(count)
+print('time:%d times' %(count))
+
+
+dicta = {}
+for i in names:
+    dicta[i] = names.count(i)
+print(dicta)
 
 
 

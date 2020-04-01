@@ -84,7 +84,7 @@ dict = {'luban':100,'daji':120}
 print(dict['luban'])
 # 如果不存在 返回NONE  或者默认值
 print(dict.get('luban1'))
-print(dict.get('sunwukong',150))
+print(dict.get('sunwukong','morenzhi'))
 dict['sunwukong'] = 150
 print(dict)
 
@@ -100,3 +100,47 @@ for i in dict.keys():
         print(i)
 for i in dict.values():
     print(i)
+
+
+dicta = {}
+dicta['haha'] = 1
+print(dicta)
+
+#元组　不能修改增加删除
+t = (10,20,30)
+print(t[0])
+# set  不允许重复        空的set空的字典
+seta = {1,2,3,2,3}
+print(seta)
+seta.add(6)
+print(seta)
+seta.remove(6)
+print(seta)
+
+
+# 函数  默认值修改时 加上参数名
+def count(i):
+    i=i+1
+    return i
+    print(i)
+result = count(1)
+print(result)
+count(3)
+
+# 模块 导入使用，也可以导入函数使用
+import time
+print('要睡了')
+time.sleep(0.1)
+print('睡好了')
+
+# 文件读写  打开 读取 关闭
+# open(file mode = 'r' encoding=None)
+file = open('G:\login.txt', 'r', encoding='utf8')
+print(file.read())
+with open('G:\login.txt', 'w', encoding='utf8') as files:
+    files.write('覆盖le')  # w覆盖写  a追加写
+files.close()
+filess = open('G:\login.txt', 'r', encoding='utf8')
+print(file.readline().strip())
+
+# 爬虫基础
