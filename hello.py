@@ -144,3 +144,69 @@ filess = open('G:\login.txt', 'r', encoding='utf8')
 print(file.readline().strip())
 
 # 爬虫基础
+import requests
+import time
+url = 'https://www.baidu.com'
+response = requests.get(url)
+response.encoding = 'utf8'
+#print(response.text)
+
+
+urla = 'https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5&callback=&_=%d' %int(time.time() * 1000)
+response = requests.get(urla)
+print('输出JSON格式下的data里面的数据：')
+print(response.json()['data'])
+url = 'https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5&callback=&_=%d' %int(time.time() * 1000)
+response = requests.get(url)
+print('输出text格式和JSON格式：')
+print(response.text)
+print(response.json())
+# data 是字符串
+response_json = response.json()
+data = response_json['data']
+print('再输出一次JSON格式下的data里面的数据：')
+print(data)
+
+# 目标 获取河南省下所有城市的疫情数据
+# data是字符串 获取数据不太方便  转换成dict
+import json
+data_dict = json.loads(data)
+print('转换为字典格式')
+print(data_dict)
+# 1,获取省份的列表
+province_list = data_dict['areaTree'][0]['children']
+print(province_list)
+# 2.找到河南这个省份
+henan_cities = []
+for province in province_list:
+    if province['name'] =='河南':
+        henan_cities=province['children']
+print('河南省内的所有城市：')
+for city in henan_cities:
+    print(city)
+
+#获取所有省份的名字以及对应的确诊信息
+
+#获取所有城市的名字以及对应的确诊信息
+import matplotlib.pyplot as plt
+cities_name = []
+cities_confirm = []
+for city in henan_cities:
+    cities_name.append(city['name'])
+    cities_confirm.append(city['total']['confirm'])
+# 可视化展示
+#解决中文乱码的问题
+plt.rcParams['font.sans-serif'] = ['SimHei']
+
+#条形图 第一个是横坐标 城市名字
+plt.bar(cities_name,cities_confirm, color='red')
+
+#横坐标字体重叠
+#第一种 颠倒横坐标
+# plt.bar(cities_confirm,cities_name)
+#第二种：旋转城市字体
+plt.xticks(rotation=-60)
+plt.xlabel('城市')
+plt.ylabel('确诊人数')
+plt.title('河南省各城市确诊人数')
+plt.show()
