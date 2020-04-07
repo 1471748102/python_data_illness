@@ -3,6 +3,7 @@ import time
 import json
 from datetime import datetime
 import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter
 from matplotlib.pyplot import  MultipleLocator
 # 数据爬取
 url = 'https://view.inews.qq.com/g2/getOnsInfo?name=disease_other&callback=&_=%d' %int(time.time() * 1000)
@@ -34,12 +35,20 @@ plt.plot(day_list[::5], nowconfirm_list[::5], color='red',  marker='o', mfc='whi
 plt.plot(day_list[::5], heal_list[::5], color='green', marker='o', mfc='white', label='累计治愈')
 plt.plot(day_list[::5], dead_list[::5], color='grey', marker='o', mfc='white', label='累计死亡')
 
+# plt.scatter(day_list, nowconfirm_list, marker='o', edgecolors='red')
+# plt.scatter(day_list, heal_list, marker='o', edgecolors='grenn')
+# plt.scatter(day_list, dead_list, marker='o', edgecolors='grey')
+
+
+
 plt.xticks(rotation=60)
 plt.title('湖北确诊/治愈/死亡趋势')
 plt.legend(loc = 'upper left')
 # 设置间隔为5
 location = MultipleLocator(5)
 ax=plt.gca()
+# 去掉前面的年限
+ax.xaxis.set_major_formatter(DateFormatter('%m-%d'))
 ax.xaxis.set_major_locator(location)
 plt.grid(axis='y')
 plt.show()
