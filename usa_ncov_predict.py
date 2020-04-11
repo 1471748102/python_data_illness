@@ -5,7 +5,7 @@ from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 import datetime as dt
 
-# parameter_K、parameter_r 是需要后面确定
+
 parameter_K = None
 parameter_r = None
 
@@ -16,7 +16,7 @@ def logistic_function(t, P0):
 
 
 # 1、获取历史数据
-def getinfo():
+def get_url_message():
     url = 'https://api.inews.qq.com/newsqa/v1/automation/foreign/daily/list?country=%E7%BE%8E%E5%9B%BD&'
     response = requests.get(url)
     usa_day_list = response.json()['data']
@@ -34,7 +34,7 @@ def getinfo():
 
 
 # 2、通过获取的确诊数据，进行拟合，求出Logistic方程中的参数
-def getcorrect(x_data, y_data):
+def get_right_num(x_data, y_data):
     # 遍历K的区间和r的区间
     K_range = np.arange(460000, 1000000, 1000)
     r_range = np.arange(0, 1, 0.01)
@@ -69,7 +69,8 @@ def getcorrect(x_data, y_data):
                 optimal_P0 = popt
             i += 1
 
-            print('\r拟合进度：{0}{1}%'.format('▉' * int(10 * i / len(K_range) / len(r_range)), int(100 * i / len(K_range) / len(r_range))), end='')
+            print('\r拟合进度：{0}{1}%'.format('▉' * int(10 * i / len(K_range) / len(r_range)),
+                                          int(100 * i / len(K_range) / len(r_range))), end='')
     print('\noptimal_K: ', optimal_K)
     print('optimal_r: ', optimal_r)
     print('optimal_P0: ', optimal_P0)
@@ -90,7 +91,7 @@ def predict(optimal_P0):
 
 
 # 4、可视化
-def picture(usa_day_list, x_data_date, y_data):
+def screen(usa_day_list, x_data_date, y_data):
     # 获取第一天
     month, day = usa_day_list[0]['date'].split('.')
     # 字符串 转成 datetime
@@ -110,16 +111,16 @@ def picture(usa_day_list, x_data_date, y_data):
     # 显示网格
     plt.grid()
     plt.ylabel('确诊人数')
-    plt.savefig('usa_predict.png', dpi=300)
+    plt.savefig('usa_ncov_predict.png', dpi=300)
     plt.show()
 
 
 if __name__ == '__main__':
-    # 获取历史数据
-    usa_day_list, x_data_date, x_data, y_data = getinfo()
-    # 通过获取的确诊数据，进行拟合，求出Logistic方程中的参数
-    parameter_K, parameter_r, optimal_P0 = getcorrect(x_data, y_data)
-    # 进行预测，把未来的天数输入到预测模型中，获取天数对应的预测确诊数
+    # 1、获取历史数据
+    usa_day_list, x_data_date, x_data, y_data = get_url_message()
+    # 2、通过获取的确诊数据，进行拟合，求出Logistic方程中的参数
+    parameter_K, parameter_r, optimal_P0 = get_right_num(x_data, y_data)
+    # 3、进行预测，把未来的天数输入到预测模型中，获取天数对应的预测确诊数
     y_data_predict = predict(optimal_P0)
-    # 可视化界面
-    picture(usa_day_list, x_data_date, y_data)
+    # 4、可视化界面
+    screen(usa_day_list, x_data_date, y_data)
